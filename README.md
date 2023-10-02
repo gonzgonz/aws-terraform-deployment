@@ -63,3 +63,67 @@ Which would be pretty much the core of:
 4. `terraform apply -input=false tfplan` # on merges to `main`
 
 Appropriate security of this CI project should be achieved by restricting the plan to be run only by users members of a certain group (like Administrators only). The Plan shall also use AWS Credentials or IAM Profile Roles in order to securely access the resources and actions in the project.
+
+## What was done to test this/ How to Apply
+
+- Ensure you have `terraorm 1.5.1` installed (I use `tfenv` to easily manage switching between versions).
+- Run `terraform apply` from the top
+
+**NOTES:**
+- I tried to stay pragmatic here. 
+- I added some nice things I though would improve the project but there's more that can be done in terms of polishing and further enhancing, some of that has been mentioned above. 
+- I used my AWS Free Tier account to test the whole apply. My current list of resources is the following:
+
+```shell
+gonz@pop-os:~/git/aws-terraform-deployment$ terraform state list
+data.aws_ami.amazon_linux_2
+data.aws_availability_zones.current
+aws_autoscaling_group.cint_infrastructure
+aws_autoscaling_policy.scale_in_policy
+aws_autoscaling_policy.scale_out_policy
+aws_db_instance.rds_instance
+aws_db_subnet_group.rds_subnet_group
+aws_eip.nat_eip
+aws_internet_gateway.main
+aws_launch_template.cint_infrastructure
+aws_lb.cint_infrastructure
+aws_lb_listener.cint_infrastructure_listener
+aws_lb_target_group.cint_infrastructure
+aws_nat_gateway.nat
+aws_route_table.private
+aws_route_table.public
+aws_route_table_association.private[0]
+aws_route_table_association.private[1]
+aws_route_table_association.private[2]
+aws_route_table_association.public[0]
+aws_route_table_association.public[1]
+aws_route_table_association.public[2]
+aws_security_group.alb_sg
+aws_security_group.handle_sg
+aws_security_group.rds_sg
+aws_subnet.private[0]
+aws_subnet.private[1]
+aws_subnet.private[2]
+aws_subnet.public[0]
+aws_subnet.public[1]
+aws_subnet.public[2]
+aws_vpc.main
+```
+
+- This is also proof of a successfull apply on my test account:
+
+```bash
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+alb_dns_name = "cint-infrastructure-alb-1730441350.us-east-1.elb.amazonaws.com"
+application_http_endpoint = "http://cint-infrastructure-alb-1730441350.us-east-1.elb.amazonaws.com"
+rds_dns_endpoint = "cint-code-test-db-instance.clsket2a8vwn.us-east-1.rds.amazonaws.com:3306"
+```
+
+- I will now destroy all the resources to avoid any possible charges :) but I can recreate it all if needed on a further call. I hope you can also run this well on your end.

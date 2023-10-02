@@ -4,16 +4,26 @@ resource "aws_security_group" "alb_sg" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
+    description = "Access From Everywhere"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 }
 
 resource "aws_lb" "cint_infrastructure" {
   name               = "cint-infrastructure-alb"
   load_balancer_type = "application"
+  internal           = false
   subnets            = aws_subnet.public[*].id
 
   security_groups = [aws_security_group.alb_sg.id]
@@ -26,10 +36,19 @@ resource "aws_security_group" "handle_sg" {
 
 
   ingress {
+    description     = "Access from attached resources"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 }
 
@@ -57,7 +76,7 @@ resource "aws_launch_template" "cint_infrastructure" {
   We're also going to install and run nginx so that something is available at port 80
   To be honest this could probably be Docker and ECS or EKS instead, but for the sake of this project I'm sticking to this.
   */
-  user_data = <<-EOF
+  user_data = base64encode(<<EOF
     #!/bin/bash
     echo "export RDS_DNS_ENDPOINT=${aws_db_instance.rds_instance.endpoint}" >> /etc/profile
     source /etc/profile
@@ -66,6 +85,7 @@ resource "aws_launch_template" "cint_infrastructure" {
     systemctl enable nginx
     systemctl start nginx
   EOF
+  )
 }
 
 resource "aws_lb_target_group" "cint_infrastructure" {
