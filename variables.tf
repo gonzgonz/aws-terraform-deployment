@@ -34,3 +34,16 @@ variable "private_subnet_count" {
   type        = number
   description = "How many private subnets to create"
 }
+
+variable "rds_username" {
+  description = "Username for the RDS instance"
+  type        = string
+  default     = "root"
+}
+
+# this is not optimal but i'm trying to be pragmatic here, we should probably use SSM or secrets manager instead
+# at least the value won't be commited into code, and is meant to be stored encrypted somewher else.
+variable "rds_password" {
+  description = "Password for the RDS instance"
+  type        = string
+}
