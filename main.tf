@@ -2,12 +2,13 @@ terraform {
   required_version = "~> 1.5"
 
   backend "s3" {
-    bucket  = "gonzaloarce-terraform-states"
-    key     = "infrastructure-deployment"
+    # please modify the following "bucket" and "key" to match ones that you own, or comment out the whole block)
+    bucket = "gonzaloarce-terraform-states"
+    key    = "infrastructure-deployment"
+
     region  = "us-east-1"
     encrypt = true
     # dynamodb_table = "terraform-states-lock" # I recommend using a DDB lock file to prevent state taints or drifts
-    # however I will disable it for now as I don't want to incur extra charges on my free tier account :)
   }
 
   required_providers {
