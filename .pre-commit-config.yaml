@@ -1,0 +1,12 @@
+default_stages: [commit]
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.4
+    hooks:
+      - id: terragrunt_fmt
+        exclude: (\.terraform\/.*$|.terraform.lock.hcl)
+      - id: terraform_fmt
+      - id: terraform_tflint
+        require_serial: true
+        args:
+          - "--args=--config=__GIT_WORKING_DIR__/.tflint.hcl"

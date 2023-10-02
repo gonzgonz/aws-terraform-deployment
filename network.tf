@@ -10,7 +10,7 @@ resource "aws_subnet" "public" {
   availability_zone = data.aws_availability_zones.current.names[count.index]
 
   tags = {
-    Name = "${var.name}-public-${count.index}" 
+    Name = "${var.name}-public-${count.index}"
   }
 }
 
@@ -42,12 +42,12 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.current.names[count.index]
 
   tags = {
-    Name = "${var.name}-private-${count.index}" 
-    }
+    Name = "${var.name}-private-${count.index}"
+  }
 }
 
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  vpc        = true
   depends_on = [aws_internet_gateway.main]
 }
 
