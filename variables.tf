@@ -1,3 +1,10 @@
+variable "region" {
+  type    = string
+  default = "us-east-1"
+  description = "The AWS Region this module will manage resources into"
+  
+}
+
 variable "name" {
   type        = string
   default     = "cint-code-test"

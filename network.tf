@@ -1,10 +1,5 @@
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
-
-  tags = merge(
-    { Name = var.name },
-    local.tags
-  )
 }
 
 resource "aws_subnet" "public" {
@@ -14,25 +9,17 @@ resource "aws_subnet" "public" {
   cidr_block        = cidrsubnet(var.vpc_cidr, var.newbits, count.index + var.newbits / 2)
   availability_zone = data.aws_availability_zones.current.names[count.index]
 
-  tags = merge(
-    { Name = "${var.name}-public-${count.index}" },
-    local.tags
-  )
+  tags = {
+    Name = "${var.name}-public-${count.index}" 
+  }
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
-
-  tags = merge(
-    { Name = var.name },
-    local.tags
-  )
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
-
-  tags = local.tags
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -54,35 +41,23 @@ resource "aws_subnet" "private" {
   cidr_block        = cidrsubnet(var.vpc_cidr, var.newbits, count.index)
   availability_zone = data.aws_availability_zones.current.names[count.index]
 
-  tags = merge(
-    { Name = "${var.name}-private-${count.index}" },
-    local.tags
-  )
+  tags = {
+    Name = "${var.name}-private-${count.index}" 
+    }
 }
 
 resource "aws_eip" "nat_eip" {
   vpc = true
-  tags = merge(
-    { Name = var.name },
-    local.tags
-  )
   depends_on = [aws_internet_gateway.main]
 }
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public[0].id
-
-  tags = merge(
-    { Name = var.name },
-    local.tags
-  )
 }
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
-
-  tags = local.tags
 
   route {
     cidr_block     = "0.0.0.0/0"
