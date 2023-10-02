@@ -23,6 +23,8 @@ What aspects need to be considered to make the code work in a CD pipeline (how d
 
 ### Main Code Base Additions
 
-1. Decided to add **pre-commit** config to use **Anton Babenko**'s very handy `tflint` `pre-commit-terraform` hooks (https://github.com/antonbabenko/pre-commit-terraform). 
+- Decided to add **pre-commit** config to use **Anton Babenko**'s very handy `tflint` `pre-commit-terraform` hooks (https://github.com/antonbabenko/pre-commit-terraform). 
 
-These can also be further complemented by hooks such as `terraform-docs` which automates creation of `README.md`` files in a project based on stuff such as variable descriptions or resource outputs (fully customisable with a [terraform-docs.yaml](https://terraform-docs.io/user-guide/configuration/))
+- A `CONTRIBUTING.md` file was also added in order to help other developers quickly set themselves up for these. The hooks run automatically upon every git commit after the first initial install.
+
+**NOTE** These can also be further complemented by hooks such as `terraform-docs` which automates creation of `README.md` files in a project based on stuff such as variable descriptions or resource outputs (fully customisable with a [terraform-docs.yaml](https://terraform-docs.io/user-guide/configuration/)) and many others.
