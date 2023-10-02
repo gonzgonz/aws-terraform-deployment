@@ -15,16 +15,25 @@ What aspects need to be considered to make the code work in a CD pipeline (how d
 ## Boilerplate code changes (Most of these can also be seen in commit messages)
 
 1. First I merged the provided boilerplate codebase from `infrastructure-deployment` into my new `aws-terraform-deployment` directory in order to create a new single main terraform module for the purpose of this project.
-2. I can see the code uses the legacy `merge` tactic to deal with tags. In my opinion it is a good idea to change these into [default_tags](https://www.hashicorp.com/blog/default-tags-in-the-terraform-aws-provider) as it can provide both a cleaner/ more DRY/intuitive way to deal with them.
+
+2. **default tags vs merging with locals** I can see the code uses the legacy `merge` tactic to deal with tags. In my opinion it is a good idea to change these into the AWS builtin [default_tags](https://www.hashicorp.com/blog/default-tags-in-the-terraform-aws-provider) as it can provide both a cleaner/ more DRY/intuitive way to deal with them.
+
 3. Decided to add a `region` variable so that the module is not restricted to run in a specific hard coded region (future proof / modularised) - this could mean the module can be later on further enhanced with a wrapper like [Terragrunt](https://github.com/gruntwork-io/terragrunt) where we can add multiple regions using variations of some inputs in each `terragrunt.hcl`, if desired (won't include this particular layout in this project but I'm happy to develop on this on a further call).
-4. Decided to bring the terraform version up to the latest minor version, for security, bug fixes, and giving access to all latest features and functions.
 
-## Code Additions 
+4. Decided to bring the `terraform`` version up to the latest minor version, for security and bug fixes reasons as well as giving access to all latest features and functions.
 
-### Main Code Base Additions
+5. Added an S3 state bucket as a best practice (with the option to also use a DDB lock table) - please feel free to comment it out when applying on your end or to replace the bucket name by one of your own (I'm using my own free tier account to test the demo).
+
+## New Stuff
+
+### Terraform Pre Commit Linter Hook
 
 - Decided to add **pre-commit** config to use **Anton Babenko**'s very handy `tflint` `pre-commit-terraform` hooks (https://github.com/antonbabenko/pre-commit-terraform). 
 
-- A `CONTRIBUTING.md` file was also added in order to help other developers quickly set themselves up for these. The hooks run automatically upon every git commit after the first initial install.
+- A `CONTRIBUTING.md` file was also added in order to help other developers quickly set themselves up for these. The hooks run automatically upon every git commit after the first initial install. Please run the commands listed in the file in order to test this on your end. You can manually force run the pre commit hooks with `pre-commit run -a` as well as letting it autorun with every commit.
 
 **NOTE** These can also be further complemented by hooks such as `terraform-docs` which automates creation of `README.md` files in a project based on stuff such as variable descriptions or resource outputs (fully customisable with a [terraform-docs.yaml](https://terraform-docs.io/user-guide/configuration/)) and many others.
+
+### New EC2 Resources
+
+- new file `ec2.tf` containing all new ec2 resources.
