@@ -5,6 +5,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 
 resource "aws_db_instance" "rds_instance" {
   engine                 = "mysql"
+  skip_final_snapshot    = true
   instance_class         = "db.t2.micro"
   allocated_storage      = 20
   storage_type           = "gp2"

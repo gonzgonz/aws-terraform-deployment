@@ -71,7 +71,7 @@ Appropriate security of this CI project should be achieved by restricting the pl
 
 **NOTES:**
 - I tried to stay pragmatic here. 
-- I added some nice things I though would improve the project but there's more that can be done in terms of polishing and further enhancing, some of that has been mentioned above. 
+- I added some nice things I thought would improve the project but there's more that can be done in terms of polishing and further enhancing, some of that has been mentioned above. 
 - I used my AWS Free Tier account to test the whole apply. My current list of resources is the following:
 
 ```shell
